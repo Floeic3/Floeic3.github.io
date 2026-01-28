@@ -34,8 +34,11 @@
 <meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x03-1.png">
 <meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x03-2.png">
 <meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x03-3.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x06-1.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x06-2.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x06-3.png">
 <meta property="article:published_time" content="2026-01-28T18:00:00.000Z">
-<meta property="article:modified_time" content="2026-01-28T18:41:55.222Z">
+<meta property="article:modified_time" content="2026-01-28T20:48:41.076Z">
 <meta property="article:author" content="Floeice">
 <meta property="article:tag" content="HybridCLR">
 <meta property="article:tag" content="MobileGame">
@@ -222,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          3.3k 字
         
       </span>
     
@@ -233,7 +236,7 @@
         
         
         
-          25 分钟
+          28 分钟
         
       </span>
     
@@ -358,12 +361,155 @@
 
 <p>执行结果：</p>
 <p><img src="/img/coderustle2/0x03-3.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="0x06-尝试使用HybridCLR-Hook❌"><a href="#0x06-尝试使用HybridCLR-Hook❌" class="headerlink" title="0x06 尝试使用HybridCLR-Hook❌"></a>0x06 尝试使用HybridCLR-Hook❌</h3><p>替换加载dll的方法固然传统有效，可这并不是一个可复用程度高的方案，显得太“重”。经过搜索，偶然发现了一个2年前的Github项目，且现已商业化：<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook">IIIImmmyyy&#x2F;HybridCLR-Hook: Unity HybridCLRHook in runtime</a>，其开源版本支持对使用了HybirdCLR的热更游戏进行Hook（仅支持入参的替换）。出于好奇，我尝试clone该项目并在使用中尝试修复部分bug。过程过于曲折🙃，以下仅记录关键过程。</p>
+<h3 id="0x06-尝试使用HybridCLR-Hook😕"><a href="#0x06-尝试使用HybridCLR-Hook😕" class="headerlink" title="0x06 尝试使用HybridCLR-Hook😕"></a>0x06 尝试使用HybridCLR-Hook😕</h3><p>替换加载dll的方法固然传统有效，可这并不是一个可复用程度高的方案，显得太“重”。经过搜索，偶然发现了一个2年前的Github项目，且现已商业化：<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook">IIIImmmyyy&#x2F;HybridCLR-Hook: Unity HybridCLRHook in runtime</a>，其开源版本支持对使用了HybirdCLR的热更游戏进行Hook（仅支持入参的替换）。出于好奇，我尝试clone该项目并在使用中尝试修复部分bug。因为实在是过于曲折🙃，以下仅记录关键过程。</p>
 <p>1.agent&#x2F;SymbolFinder.js中的<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L26">findEnterFrameFromInterpreter</a>、<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L41">findNative</a>均以特征码+指令解析方式尝试获取HybridCLR <a target="_blank" rel="noopener" href="https://github.com/focus-creative-games/hybridclr/blob/main/hybridclr/interpreter/Engine.cpp#L29">InterpFrame* InterpFrameGroup::EnterFrameFromInterpreter</a>及<a target="_blank" rel="noopener" href="https://github.com/focus-creative-games/hybridclr/blob/main/hybridclr/interpreter/Engine.cpp#L44">InterpFrame* InterpFrameGroup::EnterFrameFromNative</a>的真实入口。</p>
-<p>2.agent&#x2F;HybirdCLR.js主要实现了：解析方法结构体信息（根据<code>EnterFrameFromInterpreter</code>或<code>EnterFrameFromNative</code>传入的<code>MethodInfo* method</code>）、构造方法key、构造runtimeArgs并按pointerSize取出每个参数、执行用户回调以读取&#x2F;修改参数、注册用户观察点供Hook时按key匹配。</p>
+<p>2.agent&#x2F;HybirdCLR.js主要实现了：解析方法结构体信息（根据<code>EnterFrameFromInterpreter</code>或<code>EnterFrameFromNative</code>传入的<code>MethodInfo* method</code>以及<code>StackObject* argBase</code>）、构造方法key、构造runtimeArgs并按pointerSize取出每个参数、执行用户回调以读取&#x2F;修改参数、注册用户观察点供Hook时按key匹配。</p>
 <p>3.<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L28">SymbolFinder.js#L28</a>有误，其pattern扫描内容应根据HybridCLR实际版本修改为<code>&quot;E0 C3 21 91 E1 03 1B AA E2 03 19 AA&quot;</code>。</p>
-<p>4.<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L32">SymbolFinder.js#L32</a>有误，其指向的BL指令偏移地址应修改为<code>0xC</code>。</p>
-<p>完成上述修复后，我尝试hook <code>public AffixBase CreatAffix(int itemLevel, CreateAffixParam createAffixParam)</code>，词条洗炼时该函数被正常调用，但没有获得正确的runtimeArgs[]内容，因此上述尝试暂告一段落，待换用其他函数后续再作更新。</p>
+<p>4.<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L32">SymbolFinder.js#L32</a>有误，其指向的BL指令偏移地址应对应修改为<code>0xC</code>。</p>
+<div class="note note-warning">
+            <p>以上逆向过程，在具备条件且时间充裕的情况下，建议搭配正向开发（Unity 2020.3.x + HybirdCLR ）食用更佳，如：<a target="_blank" rel="noopener" href="https://github.com/focus-creative-games/hybridclr_trial">hybridclr_trial</a>。</p>
+          </div>
+
+<p>完成上述修复后，我尝试hook了一个较为简单的战斗金币掉落函数以测试效果：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-comment">// Wingjoy.CodeRustle.HotFix.UI.BattleUIForm</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">AddDropGoldCoins</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> count</span>)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> <span class="hljs-title class_">TestJs</span>=&#123;<br>    <span class="hljs-attr">test</span>:<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-title class_">HybridCLR</span>.<span class="hljs-title function_">observe</span>(<span class="hljs-string">&quot;Assembly-CSharp.dll&quot;</span>,<span class="hljs-string">&quot;Wingjoy.CodeRustle.HotFix.UI&quot;</span>,<span class="hljs-string">&quot;BattleUIForm&quot;</span>,<span class="hljs-string">&quot;AddDropGoldCoins&quot;</span>,<span class="hljs-number">1</span>,<br>            <span class="hljs-keyword">function</span> (<span class="hljs-params">methodInfo,runtimeArgs</span>)&#123;<br>                <span class="hljs-comment">//console.log(&quot;args len &quot;+runtimeArgs.length);</span><br>                <span class="hljs-keyword">let</span> count = runtimeArgs[<span class="hljs-number">1</span>].<span class="hljs-title function_">readU32</span>();<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;count: &quot;</span>+count);<br>                runtimeArgs[<span class="hljs-number">1</span>].<span class="hljs-title function_">writeU32</span>(count * <span class="hljs-number">50</span>); <span class="hljs-comment">//修改为50倍</span><br>            &#125;);<br>        <span class="hljs-title class_">HybridCLR</span>.<span class="hljs-title function_">attach</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>正常掉落：</p>
+<p><img src="/img/coderustle2/0x06-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>脚本执行LOG：</p>
+<p><img src="/img/coderustle2/0x06-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>Hook后掉落：</p>
+<p><img src="/img/coderustle2/0x06-3.png" srcset="/img/loading.gif" lazyload></p>
+<p>可见<code>HybridCLR-Hook</code>对于简单的入参是有效的，其是否适用于其他复杂情况（如：入参为<code>ObscuredValue</code>；是否可以在<code>OnLeave</code>阶段处理函数RET）待后续再作测试。</p>
+<h2 id="备忘"><a href="#备忘" class="headerlink" title="备忘"></a>备忘</h2><h3 id="0x07-部分物品特征码Hex"><a href="#0x07-部分物品特征码Hex" class="headerlink" title="0x07 部分物品特征码Hex"></a>0x07 部分物品特征码Hex</h3><p>此处直接使用<a target="_blank" rel="noopener" href="https://gameguardian.net/forum/files/file/2-gameguardian/">GameGuardian</a>进行搜索，其中物品数量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">RealValue = SearchBase - 0x8<br>ObscuredValue = SearchBase - 0x10 = RealValue ^ cryptoKey<br>cryptoKey = SearchBase - 0x14 = 444444<br></code></pre></td></tr></table></figure>
+
+<p>RealValue与ObscuredValue需要同步修改，否则闪退。</p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">特征码</th>
+<th align="center">物品名称</th>
+<th align="center">获取途径</th>
+<th align="center">是否绝版</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">h56811963</td>
+<td align="center">斗争历程幻化箱</td>
+<td align="center">战令奖励</td>
+<td align="center">✔️</td>
+<td align="center">幻化3选1</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">h8789C911</td>
+<td align="center">斗争历程幻化箱</td>
+<td align="center">战令奖励</td>
+<td align="center">✔️</td>
+<td align="center">幻化4选1</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">h0C7E1B1C</td>
+<td align="center">神龙之境幻化套装</td>
+<td align="center">战令奖励</td>
+<td align="center">✔️</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">hAA8D0B0A</td>
+<td align="center">斗争历程神器箱</td>
+<td align="center">战令奖励</td>
+<td align="center">✔️</td>
+<td align="center">神器戒指4选1</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">h2E3E3850</td>
+<td align="center">&lt;暗金荣耀&gt;幻化武器</td>
+<td align="center">公会兑换</td>
+<td align="center">✔️</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">hFD7D2D50</td>
+<td align="center">&lt;攻坚阵队&gt;幻化套装</td>
+<td align="center">公会兑换</td>
+<td align="center">✔️</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">hB671BC08</td>
+<td align="center">自选攻坚宝箱</td>
+<td align="center">公会Boss</td>
+<td align="center">✔️</td>
+<td align="center">自选宝箱</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center">hC474760D</td>
+<td align="center">攻坚装备金匣</td>
+<td align="center">公会Boss</td>
+<td align="center">✔️</td>
+<td align="center">独有暗金装备</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">hE92DFE5E</td>
+<td align="center">圣霆攻坚宝箱</td>
+<td align="center">公会Boss</td>
+<td align="center">✔️</td>
+<td align="center">独有雷系套装</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">h25D83D3B</td>
+<td align="center">千仞攻坚宝箱</td>
+<td align="center">公会Boss</td>
+<td align="center">✔️</td>
+<td align="center">独有土系套装</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">h8FF0323F</td>
+<td align="center">周年庆典套装幻化宝箱</td>
+<td align="center">周年庆限定</td>
+<td align="center">✔️</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="center">h12C3431D</td>
+<td align="center">周年庆典武器幻化宝箱</td>
+<td align="center">周年庆限定</td>
+<td align="center">✔️</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">hAF37CA58</td>
+<td align="center">异世见证者自选礼盒</td>
+<td align="center">秘藏纹章兑换</td>
+<td align="center">❌</td>
+<td align="center">魂术士职业限定</td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td align="center">h4BDD832C</td>
+<td align="center">强化矿石包</td>
+<td align="center">商城购买</td>
+<td align="center">❌</td>
+<td align="center">强化装备消耗</td>
+</tr>
+</tbody></table>
 
                 
               </div>
