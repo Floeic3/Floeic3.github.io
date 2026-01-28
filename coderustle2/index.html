@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Floeice">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="各位，很久不见，我是长期摸鱼的Floeice😇。原有的BLOG（floe-ice.cn）因为尚在服役、服务器和域名双双过期等不可抗力因素，已经化为历史尘埃。转眼本人重新回归到了跟生活对线的状态，是时候也有时间开始做一些新的产出了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Coderustle2 (ver 1.8.16)">
+<meta property="og:url" content="http://floeic3.github.io/coderustle2/index.html">
+<meta property="og:site_name" content="Floeice&#39;s Blog">
+<meta property="og:description" content="各位，很久不见，我是长期摸鱼的Floeice😇。原有的BLOG（floe-ice.cn）因为尚在服役、服务器和域名双双过期等不可抗力因素，已经化为历史尘埃。转眼本人重新回归到了跟生活对线的状态，是时候也有时间开始做一些新的产出了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x01-1.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x02-1.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x02-2.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x03-1.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x03-2.png">
+<meta property="og:image" content="http://floeic3.github.io/img/coderustle2/0x03-3.png">
+<meta property="article:published_time" content="2026-01-28T18:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-28T18:41:55.222Z">
+<meta property="article:author" content="Floeice">
+<meta property="article:tag" content="HybridCLR">
+<meta property="article:tag" content="MobileGame">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://floeic3.github.io/img/coderustle2/0x01-1.png">
+  
+  
+  
+  <title>Coderustle2 (ver 1.8.16) - Floeice&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"floeic3.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Floeice&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Coderustle2 (ver 1.8.16)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-29 02:00" pubdate>
+          2026年1月29日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Coderustle2 (ver 1.8.16)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>各位，很久不见，我是长期摸鱼的Floeice😇。原有的BLOG（floe-ice.cn）因为尚在服役、服务器和域名双双过期等不可抗力因素，已经化为历史尘埃。转眼本人重新回归到了跟生活对线的状态，是时候也有时间开始做一些新的产出了。</p>
+<span id="more"></span>
+
+<p>目前手边正有一款Roguelike的单机手游，最大的乐趣兼痛点自不用说，就是装备的词条（Affix）打造。下文将以修改词条洗炼逻辑为主要目的，尝试从不同角度开展对应逆向工程。</p>
+<div class="note note-info">
+            <p>APP: com.wingjoy.coderustle2 (ver 1.8.16)<br>OS: Redmi K40 with HyperOS 1.0.6.0 (Android 13)<br>Tools: frida 16.1.0&#x2F;frida-tools 12.1.0&#x2F;frida-il2cpp-bridge 0.9.1</p>
+          </div>
+
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><h3 id="0x00-分析架构"><a href="#0x00-分析架构" class="headerlink" title="0x00 分析架构"></a>0x00 分析架构</h3><p>使用LibChecker分析该游戏架构，确认为Unity il2cpp。使用<a target="_blank" rel="noopener" href="https://github.com/BryanGIG/PADumper">PADumper</a>从内存中获取libil2cpp.so及global-metadata.dat，而后使用<a target="_blank" rel="noopener" href="https://github.com/Perfare/Il2CppDumper">Il2CppDumper</a>获取DummyDll及dump.cs以供后续分析。此处发现，libil2cpp.so中并不包含<code>Assembly-CSharp.dll</code>这个关键的游戏核心Assembly，但存在<code>HybridCLR.Runtime.dll</code>第三方C#热更新框架，其官方文档附后：<a target="_blank" rel="noopener" href="https://www.hybridclr.cn/docs/intro">HybridCLR介绍</a>。</p>
+<p>通过查看原始apk内容，发现该游戏base.apk\assets\Dll目录下存在25个dll.bytes、1个VersionInfo.json配置文件。查看可知其dll命名规则为“name+md5”，同时明确Assembly-CSharp以HotFix形式加载：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;isNormalUpdate&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;currentBuildVersionUpdateTips&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;版本(1.8.16)修复了一些bug，建议更新！&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;isInWhiteList&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;1.8.16&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;dllHashs&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;assembly-CSharp&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Assembly-CSharp&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;size&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-number">4497424</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;md5&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;57955f3fa376dc99d8d1d6b238507d7b&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;isHot&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;persistent&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;sumSize&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-number">0</span><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>经测试，<code>Assembly-CSharp</code>、<code>CodeRustle.WingjoyFramework</code>、<code>WingjoyDebugger.Runtime</code>、<code>WingjoyUtilities.Runtime</code>、<code>WinjoyFramework.Runtime</code>共5个dll.bytes文件为加密状态，其他可被dnSpy正确识别为dll。由此，可基本确认游戏核心逻辑由HybridCLR以AOT或HotFix形式进行加载更新，上述5个加密dll.bytes文件于运行时解密。</p>
+<h3 id="0x01-分析注入点"><a href="#0x01-分析注入点" class="headerlink" title="0x01 分析注入点"></a>0x01 分析注入点</h3><p>使用IDA载入libil2cpp.so，定位至<code>HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(0x1EB35DC)</code>，查看其交叉引用并向上定位至<code>Wingjoy.Framework.Runtime.Launcher._LoadAotAndHotfixDlls_d__32.MoveNext(0x1DB35B8)</code>。可以发现该函数通过调用<code>Wingjoy.Framework.Runtime.WingjoyFramework.GetEncryptSetting(0x10B2058)</code>、<code>Wingjoy.Framework.Runtime.Launcher.BytesReaderInStreamingAssets(0x10A87CC)</code>、<code>System.Reflection.Assembly.Load_23524532(0x166F4B4)</code>及<code>HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(0x1EB35DC)</code>等函数分别执行加密参数获取、dll.bytes文件读取并解密、Assembly加载等流程。</p>
+<h4 id="1-dll-bytes解密流程"><a href="#1-dll-bytes解密流程" class="headerlink" title="1.dll.bytes解密流程"></a>1.dll.bytes解密流程</h4><p>进入<code>Wingjoy.Framework.Runtime.WingjoyFramework.GetEncryptSetting</code>：</p>
+<p><img src="/img/coderustle2/0x01-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>可知这段函数构造一个RijndaelManaged对象（AES），读取并设置RijndaelManaged的Key&#x2F;IV&#x2F;Mode &#x3D; CBC&#x2F;Padding &#x3D; PKCS7&#x2F;BlockSize &#x3D; 128，最终返回配置好的RijndaelManaged实例，伪代码如下：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-function">RijndaelManaged <span class="hljs-title">GetEncryptSetting</span>()</span><br>&#123;<br>    <span class="hljs-keyword">if</span> (!inited)<br>    &#123;<br>        sub_C4E34C(globalObj1);<br>        sub_C4E34C(<span class="hljs-string">&quot;€3*@&#123;&quot;</span>);<br>        sub_C4E34C(<span class="hljs-string">&quot;€2*@&#123;&quot;</span>);<br>        inited = <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">var</span> rij = <span class="hljs-keyword">new</span> RijndaelManaged();<br>    <span class="hljs-built_in">byte</span>[] key = Encoding.UTF8.GetBytes(<span class="hljs-string">&quot;€2*@&#123;&quot;</span>);<br>    rij.Key = key;<br>    <span class="hljs-built_in">byte</span>[] iv = Encoding.UTF8.GetBytes(<span class="hljs-string">&quot;€3*@&#123;&quot;</span>);<br>    rij.IV = iv;<br>    rij.Mode = CipherMode.CBC;<br>    rij.Padding = PaddingMode.PKCS7;<br>    rij.BlockSize = <span class="hljs-number">128</span>;<br>    <span class="hljs-keyword">return</span> rij;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中全局字符串<code>€3*@&#123;</code>、<code>€2*@&#123;</code>实际为Key和IV的占位符，需动态获取，可通过hook <code>System.Security.Cryptography.RijndaelManaged.CreateDecryptor(0x12662C0)</code>的<code>Args[1]</code>、<code>Args[2]</code>来获得。其函数原型为：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">override</span> ICryptoTransform <span class="hljs-title">CreateDecryptor</span>(<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-built_in">byte</span>[] rgbKey,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-built_in">byte</span>[] rgbIV</span></span><br><span class="hljs-params"><span class="hljs-function"></span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-Assembly加载流程"><a href="#2-Assembly加载流程" class="headerlink" title="2.Assembly加载流程"></a>2.Assembly加载流程</h4><p>在正式分析之前，先学习一下他人的实战教程：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/649757859">HybridCLR热更+简单实战</a>，重点查看加载AOT元数据DLL任务及加载热更DLL任务部分代码：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> UniTask _load_hotfix_dlls()<br>&#123;<br>    <span class="hljs-comment">// 加载热更DLL</span><br>    <span class="hljs-comment">// 这里使用标签来加载资源 Addressables会自动根据标签来加载所有资源</span><br>    <span class="hljs-keyword">var</span> dlls = <span class="hljs-keyword">await</span> Addressables.LoadAssetsAsync&lt;TextAsset&gt;(hotUpdateDllLabelRef, <span class="hljs-literal">null</span>);<br>    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> asset <span class="hljs-keyword">in</span> dlls)<br>    &#123;<br>        Debug.Log(<span class="hljs-string">&quot;加载热更DLL:&quot;</span> + asset.name);<br>        Assembly.Load(asset.bytes);<br>        Debug.Log(<span class="hljs-string">&quot;加载热更DLL:&quot;</span> + asset.name + <span class="hljs-string">&quot;完成&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">async</span> UniTask _load_meta_data_for_aot_dlls()<br>&#123;<br>    <span class="hljs-comment">//这一步实际上是为了解决AOT 泛型类的问题 </span><br>    HomologousImageMode mode = HomologousImageMode.SuperSet;<br>    <span class="hljs-keyword">var</span> aots = <span class="hljs-keyword">await</span> Addressables.LoadAssetsAsync&lt;TextAsset&gt;(aotMetadataDllLabelRef, <span class="hljs-literal">null</span>);<br>    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> asset <span class="hljs-keyword">in</span> aots)<br>    &#123;<br>        LoadImageErrorCode errorCode = RuntimeApi.LoadMetadataForAOTAssembly(asset.bytes, mode);<br>        <span class="hljs-keyword">if</span> (errorCode == LoadImageErrorCode.OK)<br>        &#123;<br>            <span class="hljs-keyword">continue</span>;<br>        &#125;<br>        Debug.LogError(<span class="hljs-string">$&quot;加载AOT元数据DLL:<span class="hljs-subst">&#123;asset.name&#125;</span>失败,错误码:<span class="hljs-subst">&#123;errorCode&#125;</span>&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可知HotFix形式的dll通过<code>Assembly.Load</code>加载，AOT元数据dll通过<code>RuntimeApi.LoadMetadataForAOTAssembly</code>加载。</p>
+<p>现在我们回到IDA，<code>System.Reflection.Assembly.Load_23524532(0x166F4B4)</code>的函数原型为：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Assembly <span class="hljs-title">Load</span>(<span class="hljs-params"><span class="hljs-built_in">byte</span>[] rawAssembly</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(0x1EB35DC)</code>的函数原型为：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">extern</span> <span class="hljs-built_in">int</span> <span class="hljs-title">LoadMetadataForAOTAssembly</span>(<span class="hljs-params"><span class="hljs-built_in">byte</span>* dllBytes, <span class="hljs-built_in">int</span> dllSize, <span class="hljs-built_in">int</span> mode</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>rawAssembly、dllBytes对应的byte[]指针&#x2F;数组在il2cpp中均遵循Il2CppArray布局：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-keyword">struct</span> Il2CppArray<br>&#123;<br>    Il2CppObject obj;     <span class="hljs-comment">// 0x00: 对象头（klass 指针 + monitor）</span><br>    Il2CppArrayBounds* bounds; <span class="hljs-comment">// 0x10: 可选，多维数组才有；一维数组为 NULL</span><br>    uint32_t max_length;  <span class="hljs-comment">// 0x18: 数组长度</span><br>    T m_Items[<span class="hljs-number">0</span>];         <span class="hljs-comment">// 0x20: 数据起始位置</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>其内存结构为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">+0x00  Il2CppClass* klass<br>+0x08  MonitorData* monitor<br>+0x10  NULL (一维数组)<br>+0x18  uint32_t length<br>+0x1C  padding<br>+0x20  uint8_t data[length]<br></code></pre></td></tr></table></figure>
+
+<p>因此通过hook <code>Args[0]+0x18</code>即可获得Assembly长度，而后hook <code>Args[0]+0x20</code>即可获得全部数据。</p>
+<h3 id="0x02-解密Assembly-CSharp-dll-bytes的2种方式"><a href="#0x02-解密Assembly-CSharp-dll-bytes的2种方式" class="headerlink" title="0x02 解密Assembly-CSharp.dll.bytes的2种方式"></a>0x02 解密Assembly-CSharp.dll.bytes的2种方式</h3><p>没啥好说的，这游戏没壳（曾经有用过FairGuard，但大概后续没再续费😥），直接frida一把梭。</p>
+<p>手机端在root权限下运行server：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">alioth:/data/local/tmp <span class="hljs-comment"># ./frida-server-16.1.0-android-arm64</span><br></code></pre></td></tr></table></figure>
+
+<p>电脑端通过以下命令直接注入脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">frida -Uf com.wingjoy.coderustle2 -l D:\Floeice\com.wingjoy.coderustle2\Hook\frida.js<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-通过动态获取AES-Key-IV执行通用解密"><a href="#1-通过动态获取AES-Key-IV执行通用解密" class="headerlink" title="1.通过动态获取AES Key&#x2F;IV执行通用解密"></a>1.通过动态获取AES Key&#x2F;IV执行通用解密</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">readIl2cppByteArray</span>(<span class="hljs-params">arr</span>) &#123;<br>    <span class="hljs-keyword">if</span> (arr.<span class="hljs-title function_">isNull</span>()) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">const</span> length = arr.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x18</span>).<span class="hljs-title function_">readU32</span>();<br>    <span class="hljs-keyword">const</span> data = arr.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x20</span>);<br>    <span class="hljs-keyword">return</span> data.<span class="hljs-title function_">readByteArray</span>(length);<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">tryHook</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">const</span> base = <span class="hljs-title class_">Module</span>.<span class="hljs-title function_">findBaseAddress</span>(<span class="hljs-string">&quot;libil2cpp.so&quot;</span>);<br>    <span class="hljs-keyword">if</span> (!base) <span class="hljs-keyword">return</span>;<br>    <span class="hljs-comment">//CreateDecryptor绝对偏移</span><br>    <span class="hljs-keyword">const</span> offset = <span class="hljs-number">0x12662C0</span>;<br>    <span class="hljs-keyword">const</span> target = base.<span class="hljs-title function_">add</span>(offset);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Hook CreateDecryptor @&quot;</span>, target);<br>    <span class="hljs-title class_">Interceptor</span>.<span class="hljs-title function_">attach</span>(target, &#123;<br>        <span class="hljs-title function_">onEnter</span>(<span class="hljs-params">args</span>) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-keyword">const</span> key = <span class="hljs-title function_">readIl2cppByteArray</span>(args[<span class="hljs-number">1</span>]);<br>                <span class="hljs-keyword">const</span> iv  = <span class="hljs-title function_">readIl2cppByteArray</span>(args[<span class="hljs-number">2</span>]);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;\n[CreateDecryptor] Key:&quot;</span>);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">hexdump</span>(key, &#123; <span class="hljs-attr">ansi</span>: <span class="hljs-literal">true</span> &#125;));<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;\n[CreateDecryptor] IV:&quot;</span>);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">hexdump</span>(iv, &#123; <span class="hljs-attr">ansi</span>: <span class="hljs-literal">true</span> &#125;));<br>            &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[!] 读取失败:&quot;</span>, e);<br>            &#125;<br>        &#125;<br>    &#125;);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-keyword">const</span> timer = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">tryHook</span>()) <span class="hljs-built_in">clearInterval</span>(timer);<br>&#125;, <span class="hljs-number">10</span>);<br></code></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<p><img src="/img/coderustle2/0x02-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>可知Key &#x3D; <strong>WingjoyGame_2023</strong>，IV &#x3D; <strong>WingjoyGame_2017</strong>。分别新建EncryptedDll、DecryptedDll文件夹，将所有dll.bytes文件放入EncryptedDll中，接着写一个批量解密python脚本即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">from</span> Crypto.Cipher <span class="hljs-keyword">import</span> AES<br><span class="hljs-keyword">from</span> Crypto.Util.Padding <span class="hljs-keyword">import</span> unpad<br><br>ENCRYPTED_DIR = Path(<span class="hljs-string">r&quot;D:\Floeice\com.wingjoy.coderustle2\EncryptedDll&quot;</span>)   <span class="hljs-comment"># 加密文件目录</span><br>DECRYPTED_DIR = Path(<span class="hljs-string">r&quot;D:\Floeice\com.wingjoy.coderustle2\DecryptedDll&quot;</span>)   <span class="hljs-comment"># 解密输出目录</span><br><br>KEY = <span class="hljs-string">b&quot;WingjoyGame_2023&quot;</span>   <span class="hljs-comment"># 16 bytes → AES-128</span><br>IV  = <span class="hljs-string">b&quot;WingjoyGame_2017&quot;</span>   <span class="hljs-comment"># 16 bytes</span><br><span class="hljs-comment"># ==========================</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">try_decrypt</span>(<span class="hljs-params">ciphertext: <span class="hljs-built_in">bytes</span></span>) -&gt; <span class="hljs-built_in">bytes</span> | <span class="hljs-literal">None</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;尝试解密，如果失败（说明不是加密文件）则返回 None&quot;&quot;&quot;</span><br>    cipher = AES.new(KEY, AES.MODE_CBC, IV)<br>    plaintext = cipher.decrypt(ciphertext)<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">return</span> unpad(plaintext, AES.block_size)<br>    <span class="hljs-keyword">except</span> ValueError:<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>  <span class="hljs-comment"># padding 错误 → 未加密</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">decrypt_file</span>(<span class="hljs-params">in_path: Path, out_path: Path</span>):<br>    <span class="hljs-keyword">with</span> in_path.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;rb&quot;</span>) <span class="hljs-keyword">as</span> f:<br>        ciphertext = f.read()<br>    result = try_decrypt(ciphertext)<br>    <span class="hljs-keyword">if</span> result <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[skip] Not encrypted: <span class="hljs-subst">&#123;in_path&#125;</span>&quot;</span>)<br>        <span class="hljs-keyword">return</span><br>    <span class="hljs-comment"># 修改输出扩展名为 .dll</span><br>    out_path = out_path.with_suffix(<span class="hljs-string">&quot;.dll&quot;</span>)<br>    out_path.parent.mkdir(parents=<span class="hljs-literal">True</span>, exist_ok=<span class="hljs-literal">True</span>)<br>    <span class="hljs-keyword">with</span> out_path.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> f:<br>        f.write(result)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[ok] Decrypted: <span class="hljs-subst">&#123;in_path&#125;</span> -&gt; <span class="hljs-subst">&#123;out_path&#125;</span>&quot;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">decrypt_dir</span>(<span class="hljs-params">input_dir: Path, output_dir: Path</span>):<br>    <span class="hljs-keyword">for</span> root, _, files <span class="hljs-keyword">in</span> os.walk(input_dir):<br>        root_path = Path(root)<br>        <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> files:<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> name.endswith(<span class="hljs-string">&quot;.bytes&quot;</span>):<br>                <span class="hljs-keyword">continue</span>  <span class="hljs-comment"># 只处理 .bytes</span><br>            in_path = root_path / name<br>            rel_path = in_path.relative_to(input_dir)<br>            out_path = output_dir / rel_path<br>            decrypt_file(in_path, out_path)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[*] Input : <span class="hljs-subst">&#123;ENCRYPTED_DIR&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[*] Output: <span class="hljs-subst">&#123;DECRYPTED_DIR&#125;</span>&quot;</span>)<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ENCRYPTED_DIR.is_dir():<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[!] Input directory not found: <span class="hljs-subst">&#123;ENCRYPTED_DIR&#125;</span>&quot;</span>)<br>        <span class="hljs-keyword">return</span><br>    decrypt_dir(ENCRYPTED_DIR, DECRYPTED_DIR)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[*] Done.&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<p>执行后得到包含Assembly-CSharp在内的5个解密dll：</p>
+<p><img src="/img/coderustle2/0x02-2.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="2-通过hook-Assembly-Load直接获取解密内容"><a href="#2-通过hook-Assembly-Load直接获取解密内容" class="headerlink" title="2.通过hook Assembly.Load直接获取解密内容"></a>2.通过hook Assembly.Load直接获取解密内容</h4><p>更直接，更强硬🥵，直接将解密后的<code>Assembly-CSharp.dll</code> dump至&#x2F;sdcard&#x2F;Download目录下：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;frida-il2cpp-bridge&quot;</span>;<br><br><span class="hljs-keyword">const</span> RVA_AsmLoadBytes = <span class="hljs-number">0x166F4B4</span>;<br><br><span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-title function_">perform</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> base = <span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-property">module</span>.<span class="hljs-property">base</span>;<br>    <span class="hljs-keyword">const</span> target = base.<span class="hljs-title function_">add</span>(RVA_AsmLoadBytes);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Hooking Assembly.Load(byte[]) @&quot;</span>, target);<br><br>    <span class="hljs-title class_">Interceptor</span>.<span class="hljs-title function_">attach</span>(target, &#123;<br>        <span class="hljs-title function_">onEnter</span>(<span class="hljs-params">args</span>) &#123;<br>            <span class="hljs-keyword">const</span> rawAssembly = args[<span class="hljs-number">0</span>];<br>            <span class="hljs-comment">// IL2CPP byte[] layout</span><br>            <span class="hljs-keyword">const</span> length  = rawAssembly.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x18</span>).<span class="hljs-title function_">readU32</span>();<br>            <span class="hljs-keyword">const</span> dataPtr = rawAssembly.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x20</span>);<br>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;\n[Assembly.Load] length =&quot;</span>, length);<br>            <span class="hljs-comment">// 只 dump Assembly-CSharp.dll</span><br>            <span class="hljs-keyword">if</span> (length === <span class="hljs-number">4497408</span>) &#123;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Detected Assembly-CSharp.dll, dumping...&quot;</span>);<br>                <span class="hljs-keyword">const</span> raw = <span class="hljs-title class_">Memory</span>.<span class="hljs-title function_">readByteArray</span>(dataPtr, length);<br>                <span class="hljs-keyword">const</span> path = <span class="hljs-string">&quot;/sdcard/Download/Assembly-CSharp.dll&quot;</span>;<br>                <span class="hljs-keyword">const</span> file = <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(path, <span class="hljs-string">&quot;wb&quot;</span>);<br>                file.<span class="hljs-title function_">write</span>(raw);<br>                file.<span class="hljs-title function_">flush</span>();<br>                file.<span class="hljs-title function_">close</span>();<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Saved Assembly-CSharp.dll to&quot;</span>, path);<br>            &#125;<br>        &#125;<br>    &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p><strong>同理，此处亦可作为后续<code>Assembly-CSharp.dll</code>替换的关键载点。</strong></p>
+<div class="note note-warning">
+            <p>额外说明：仅Assembly-CSharp.dll通过Assembly.Load加载，其余24个AOT Assembly均通过RuntimeApi.LoadMetadataForAOTAssembly加载。此处加载逻辑可通过下述脚本自行验证。</p>
+          </div>
+
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;frida-il2cpp-bridge&quot;</span>;<br><br><span class="hljs-keyword">const</span> RVA_LoadMeta      = <span class="hljs-number">0x1EB35DC</span>;  <span class="hljs-comment">// HybridCLR_RuntimeApi__LoadMetadataForAOTAssembly</span><br><span class="hljs-keyword">const</span> RVA_AsmLoadBytes  = <span class="hljs-number">0x166F4B4</span>;  <span class="hljs-comment">// System_Reflection_Assembly__Load_23524532</span><br><br><span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-title function_">perform</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> base = <span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-property">module</span>.<span class="hljs-property">base</span>;<br>    <span class="hljs-comment">// ========== 1. Hook LoadMetadataForAOTAssembly ==========</span><br>    &#123;<br>        <span class="hljs-keyword">const</span> target = base.<span class="hljs-title function_">add</span>(RVA_LoadMeta);<br>        <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Hooking LoadMetadataForAOTAssembly @&quot;</span>, target);<br><br>        <span class="hljs-title class_">Interceptor</span>.<span class="hljs-title function_">attach</span>(target, &#123;<br>            <span class="hljs-title function_">onEnter</span>(<span class="hljs-params">args</span>) &#123;<br>                count++;<br>                <span class="hljs-keyword">const</span> dllBytes = args[<span class="hljs-number">0</span>];<br>                <span class="hljs-keyword">const</span> mode     = args[<span class="hljs-number">1</span>].<span class="hljs-title function_">toInt32</span>();<br>                <span class="hljs-keyword">let</span> length = <span class="hljs-number">0</span>;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// IL2CPP byte[]: +0x18 = max_length, +0x20 = data</span><br>                    length = dllBytes.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x18</span>).<span class="hljs-title function_">readU32</span>();<br>                &#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`\n===== LoadMetadataForAOTAssembly #<span class="hljs-subst">$&#123;count&#125;</span> =====`</span>);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;dllBytes =&quot;</span>, dllBytes);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;mode     =&quot;</span>, mode);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;length   =&quot;</span>, length);<br>            &#125;,<br><br>            <span class="hljs-title function_">onLeave</span>(<span class="hljs-params">retval</span>) &#123;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;RET =&quot;</span>, retval.<span class="hljs-title function_">toInt32</span>());<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">// ========== 2. Hook System.Reflection.Assembly.Load(byte[]) ==========</span><br>    &#123;<br>        <span class="hljs-keyword">const</span> target = base.<span class="hljs-title function_">add</span>(RVA_AsmLoadBytes);<br>        <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Hooking System.Reflection.Assembly::Load(byte[]) @&quot;</span>, target);<br><br>        <span class="hljs-title class_">Interceptor</span>.<span class="hljs-title function_">attach</span>(target, &#123;<br>            <span class="hljs-title function_">onEnter</span>(<span class="hljs-params">args</span>) &#123;<br>                count++;<br>                <span class="hljs-keyword">const</span> rawAssembly = args[<span class="hljs-number">0</span>];<br>                <span class="hljs-keyword">let</span> length  = <span class="hljs-number">0</span>;<br>                <span class="hljs-keyword">let</span> dataPtr = <span class="hljs-title function_">ptr</span>(<span class="hljs-number">0</span>);<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 同样是 IL2CPP byte[] 布局</span><br>                    length  = rawAssembly.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x18</span>).<span class="hljs-title function_">readU32</span>();<br>                    dataPtr = rawAssembly.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x20</span>);<br>                &#125; <span class="hljs-keyword">catch</span> (e) &#123;&#125;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`\n===== Assembly.Load(byte[]) #<span class="hljs-subst">$&#123;count&#125;</span> =====`</span>);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;rawAssembly =&quot;</span>, rawAssembly);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;length      =&quot;</span>, length);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;dataPtr     =&quot;</span>, dataPtr);<br>            &#125;,<br><br>            <span class="hljs-title function_">onLeave</span>(<span class="hljs-params">retval</span>) &#123;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;RET =&quot;</span>, retval);<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<h3 id="0x03-确认修改逻辑"><a href="#0x03-确认修改逻辑" class="headerlink" title="0x03 确认修改逻辑"></a>0x03 确认修改逻辑</h3><p>使用dnSpy打开解密后的<code>Assembly-CSharp.dll</code>，定位到:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-comment">//Wingjoy.CodeRustle.HotFix.UI.ProcessingTableUIFormNS.RefinePanelUIGroup</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> AffixBase <span class="hljs-title">GetNewAffix</span>(<span class="hljs-params">EquipmentBase equipment, AffixBase oldAffix</span>)</span><br></code></pre></td></tr></table></figure>
+
+<p>查看红框标注的装备词条洗炼关键逻辑：</p>
+<p><img src="/img/coderustle2/0x03-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>其中<code>CreateAffixParam</code>为构造函数：</p>
+<p><img src="/img/coderustle2/0x03-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>每洗炼一次，即赋予一次随机词条属性，同时将Refined &#x3D; true、Best &#x3D; value（结合上文，value实际 &#x3D; false）传入<code>CreateAffixParam</code>。结合游戏实际表现，可知正常逻辑下，洗炼得到的词条一定不为满值（非Best），且除被洗炼词条之外的其他词条均被锁定（被洗炼词条被标记为Refined）。为了实现每条词条均可洗炼，或洗炼必为满值（过于非法且暴力，不推荐🙃），可修改如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">bool value = <span class="hljs-literal">true</span>; //等效于Best = <span class="hljs-literal">true</span>，洗炼必为满值<br>Refined = <span class="hljs-literal">false</span>;   //被洗炼词条之外的其他词条不被锁定<br></code></pre></td></tr></table></figure>
+
+<h2 id="修改实现"><a href="#修改实现" class="headerlink" title="修改实现"></a>修改实现</h2><h3 id="0x04-修改特定IL指令✔️"><a href="#0x04-修改特定IL指令✔️" class="headerlink" title="0x04 修改特定IL指令✔️"></a>0x04 修改特定IL指令✔️</h3><p>使用dnSpy的“编辑IL指令”功能，分别修改如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">//bool value = <span class="hljs-literal">true</span>;<br>0000 ldc.i4.0 --&gt; ldc.i4.1<br>//Refined = <span class="hljs-literal">false</span>;<br>0037 ldc.i4.1 --&gt; ldc.i4.0<br>0233 ldc.i4.1 --&gt; ldc.i4.0<br></code></pre></td></tr></table></figure>
+
+<h3 id="0x05-替换并加载Assembly-CSharp-dll✔️"><a href="#0x05-替换并加载Assembly-CSharp-dll✔️" class="headerlink" title="0x05 替换并加载Assembly-CSharp.dll✔️"></a>0x05 替换并加载Assembly-CSharp.dll✔️</h3><p>将上述修改后的<code>Assembly-CSharp.dll</code>保存并push至手机端&#x2F;data&#x2F;local&#x2F;tmp目录下，确认文件权限无误的情况下，执行以下脚本：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs ts"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;frida-il2cpp-bridge&quot;</span>;<br><br><span class="hljs-keyword">const</span> RVA_AsmLoadBytes = <span class="hljs-number">0x166F4B4</span>;<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">REPLACE_PATH</span> = <span class="hljs-string">&quot;/data/local/tmp/Assembly-CSharp.dll&quot;</span>;<br><br><span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-title function_">perform</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> base = <span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-property">module</span>.<span class="hljs-property">base</span>;<br>    <span class="hljs-keyword">const</span> target = base.<span class="hljs-title function_">add</span>(RVA_AsmLoadBytes);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Hooking Assembly.Load(byte[]) @&quot;</span>, target);<br>    <span class="hljs-comment">// 先获取 System.Byte 的 Il2CppClass</span><br>    <span class="hljs-keyword">const</span> byteClass = <span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-property">corlib</span>.<span class="hljs-title function_">class</span>(<span class="hljs-string">&quot;System.Byte&quot;</span>);<br><br>    <span class="hljs-title class_">Interceptor</span>.<span class="hljs-title function_">attach</span>(target, &#123;<br>        <span class="hljs-title function_">onEnter</span>(<span class="hljs-params">args</span>) &#123;<br>            <span class="hljs-keyword">const</span> orig = args[<span class="hljs-number">0</span>];<br>            <span class="hljs-keyword">const</span> origLength = orig.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x18</span>).<span class="hljs-title function_">readU32</span>();<br>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] [Assembly.Load] original length =&quot;</span>, origLength);<br>            <span class="hljs-comment">// 读取替换 DLL</span><br>            <span class="hljs-keyword">let</span> file;<br>            <span class="hljs-keyword">try</span> &#123;<br>                file = <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-variable constant_">REPLACE_PATH</span>, <span class="hljs-string">&quot;rb&quot;</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[!] No replacement DLL found at&quot;</span>, <span class="hljs-variable constant_">REPLACE_PATH</span>);<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            <span class="hljs-keyword">const</span> newBytes = file.<span class="hljs-title function_">readBytes</span>();<br>            file.<span class="hljs-title function_">close</span>();<br>            <span class="hljs-keyword">if</span> (!newBytes || newBytes.<span class="hljs-property">byteLength</span> === <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[!] Replacement DLL is empty&quot;</span>);<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            <span class="hljs-keyword">const</span> newLength = newBytes.<span class="hljs-property">byteLength</span>;<br>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Replacement DLL loaded, size =&quot;</span>, newLength);<br>            <span class="hljs-keyword">const</span> arr = <span class="hljs-title class_">Il2Cpp</span>.<span class="hljs-title function_">array</span>(byteClass, newLength);<br>            <span class="hljs-comment">// 写入数据</span><br>            <span class="hljs-title class_">Memory</span>.<span class="hljs-title function_">writeByteArray</span>(arr.<span class="hljs-property">handle</span>.<span class="hljs-title function_">add</span>(<span class="hljs-number">0x20</span>), newBytes);<br>            <span class="hljs-comment">// 替换参数</span><br>            args[<span class="hljs-number">0</span>] = arr.<span class="hljs-property">handle</span>;<br>            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;[+] Assembly.Load(byte[]) replaced with new DLL&quot;</span>);<br>        &#125;<br>    &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<p><img src="/img/coderustle2/0x03-3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="0x06-尝试使用HybridCLR-Hook❌"><a href="#0x06-尝试使用HybridCLR-Hook❌" class="headerlink" title="0x06 尝试使用HybridCLR-Hook❌"></a>0x06 尝试使用HybridCLR-Hook❌</h3><p>替换加载dll的方法固然传统有效，可这并不是一个可复用程度高的方案，显得太“重”。经过搜索，偶然发现了一个2年前的Github项目，且现已商业化：<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook">IIIImmmyyy&#x2F;HybridCLR-Hook: Unity HybridCLRHook in runtime</a>，其开源版本支持对使用了HybirdCLR的热更游戏进行Hook（仅支持入参的替换）。出于好奇，我尝试clone该项目并在使用中尝试修复部分bug。过程过于曲折🙃，以下仅记录关键过程。</p>
+<p>1.agent&#x2F;SymbolFinder.js中的<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L26">findEnterFrameFromInterpreter</a>、<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L41">findNative</a>均以特征码+指令解析方式尝试获取HybridCLR <a target="_blank" rel="noopener" href="https://github.com/focus-creative-games/hybridclr/blob/main/hybridclr/interpreter/Engine.cpp#L29">InterpFrame* InterpFrameGroup::EnterFrameFromInterpreter</a>及<a target="_blank" rel="noopener" href="https://github.com/focus-creative-games/hybridclr/blob/main/hybridclr/interpreter/Engine.cpp#L44">InterpFrame* InterpFrameGroup::EnterFrameFromNative</a>的真实入口。</p>
+<p>2.agent&#x2F;HybirdCLR.js主要实现了：解析方法结构体信息（根据<code>EnterFrameFromInterpreter</code>或<code>EnterFrameFromNative</code>传入的<code>MethodInfo* method</code>）、构造方法key、构造runtimeArgs并按pointerSize取出每个参数、执行用户回调以读取&#x2F;修改参数、注册用户观察点供Hook时按key匹配。</p>
+<p>3.<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L28">SymbolFinder.js#L28</a>有误，其pattern扫描内容应根据HybridCLR实际版本修改为<code>&quot;E0 C3 21 91 E1 03 1B AA E2 03 19 AA&quot;</code>。</p>
+<p>4.<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook/blob/master/agent/SymbolFinder.js#L32">SymbolFinder.js#L32</a>有误，其指向的BL指令偏移地址应修改为<code>0xC</code>。</p>
+<p>完成上述修复后，我尝试hook <code>public AffixBase CreatAffix(int itemLevel, CreateAffixParam createAffixParam)</code>，词条洗炼时该函数被正常调用，但没有获得正确的runtimeArgs[]内容，因此上述尝试暂告一段落，待换用其他函数后续再作更新。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MobileGame/" class="print-no-link">#MobileGame</a>
+      
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+        <a href="/tags/HybridCLR/" class="print-no-link">#HybridCLR</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Coderustle2 (ver 1.8.16)</div>
+      <div>http://floeic3.github.io/coderustle2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Floeice</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
