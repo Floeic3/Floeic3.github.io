@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=light>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#000000">
+  <meta name="author" content="Floeice">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="被迫造轮子但必须得手撕Asm的感觉不亚于屎里找饭，这种自虐的感觉真让人欲罢不能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HybridCLR拆解记录 (Part. I)">
+<meta property="og:url" content="http://floeic3.github.io/hybridCLR/index.html">
+<meta property="og:site_name" content="Floeice&#39;s Blog">
+<meta property="og:description" content="被迫造轮子但必须得手撕Asm的感觉不亚于屎里找饭，这种自虐的感觉真让人欲罢不能。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x03-1.png">
+<meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x03-2.png">
+<meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x04-1.png">
+<meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x05-1.png">
+<meta property="article:published_time" content="2026-02-08T18:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-10T09:36:31.133Z">
+<meta property="article:author" content="Floeice">
+<meta property="article:tag" content="HybridCLR">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://floeic3.github.io/img/hybridCLR/0x03-1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>HybridCLR拆解记录 (Part. I) - Floeice&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"floeic3.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Floeice&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>Links</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HybridCLR拆解记录 (Part. I)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-02-09 02:00" pubdate>
+          February 9, 2026 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HybridCLR拆解记录 (Part. I)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>被迫造轮子但必须得手撕Asm的感觉不亚于屎里找饭，<del>这种自虐的感觉真让人欲罢不能。</del></p>
+<span id="more"></span>
+
+<p>原本在<a href="https://floeic3.github.io/coderustle2/#0x06-%E5%B0%9D%E8%AF%95%E4%BD%BF%E7%94%A8HybridCLR-Hook%F0%9F%98%95">上一篇文章0x06</a>的尝试过后，我已经打定主意不再碰HybridCLR了，一是因为网络上可参考的内容确实不多，native hook方案非开源，<del>抄都没地方抄</del>；二是既然已经可以直接replace dll了，为啥还要自找麻烦呢？但实在是不甘心只能用Frida脚本反复试错，于是艰苦的旅程又双叒叕开始了。下文依旧围绕coderustle2展开。</p>
+<div class="note note-info">
+            <p>APP: com.wingjoy.coderustle2 (ver 1.8.16)<br>OS: Redmi K40 with HyperOS 1.0.6.0 (Android 13) &#x2F; Xiaomi 14 with HyperOS 3.0.6.0 (Android 16)<br>Tools: Android Studio &#x2F; NDK r27 &#x2F; SDK 36.0</p>
+          </div>
+
+<h2 id="函数进入监听及入参修改"><a href="#函数进入监听及入参修改" class="headerlink" title="函数进入监听及入参修改"></a>函数进入监听及入参修改</h2><h3 id="0x00-原理分析"><a href="#0x00-原理分析" class="headerlink" title="0x00 原理分析"></a>0x00 原理分析</h3><div class="note note-warning">
+            <p>额外说明：不同版本的HybridCLR，相关重要函数参数及结构体定义不尽相同。以下内容均基于hybridclr-4.0.0。</p>
+          </div>
+
+<p>不赘述，根据官方文档<a target="_blank" rel="noopener" href="https://www.hybridclr.cn/docs/basic/methodbridge">桥接函数</a>、<a target="_blank" rel="noopener" href="https://www.hybridclr.cn/docs/basic/sourceinspect">HybridCLR源码结构及调试</a>及源码，可知<code>hybridclr/interpreter/interpreter_Execute.cpp</code>的<code>Interpreter::Execute</code>函数负责寄存器IR指令的解释执行，同时也是Native&#x2F;反射进入解释器的唯一入口；<code>hybridclr/interpreter/Engine.h</code>的<code>EnterFrameFromInterpreter</code>函数负责解释器调用解释器（即解释器内部A方法调用内部B方法）时建立 frame，不复制参数；<code>hybridclr/interpreter/Engine.h</code>的<code>EnterFrameFromNative</code>函数负责Native调用解释器时建立 frame，并把参数搬进解释器栈。上述亦参考了其他分析文章：<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-281910.htm">UnityHybirdCLR Hook实现</a>、<a target="_blank" rel="noopener" href="https://frog-game.github.io/posts/read/hybridclr-yuanmayuedu/#%e4%b8%80%e4%ba%9b%e5%89%8d%e6%8f%90%e7%9f%a5%e8%af%86%e7%82%b9">HybridCLR源码赏析</a></p>
+<p>结论显而易见，同时hook <code>EnterFrameFromNative</code>和<code>EnterFrameFromInterpreter</code>函数，根据第一个参数<code>InterpMethodInfo* imi</code>结构体定义，通过解析可获得<code>MethodInfo* method</code>，进而拿到所有进入解释器的方法信息。<code>InterpMethodInfo</code>定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/InterpreterDefs.h</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">InterpMethodInfo</span> &#123;<br>    <span class="hljs-type">const</span> MethodInfo* method;<br>    MethodArgDesc* args;<br>    <span class="hljs-type">uint32_t</span> argCount;<br>    <span class="hljs-type">uint32_t</span> argStackObjectSize;<br>    byte* codes;<br>    <span class="hljs-type">uint32_t</span> codeLength;<br>    <span class="hljs-type">uint32_t</span> maxStackSize; <span class="hljs-comment">// args + locals + evalstack size</span><br>    <span class="hljs-type">uint32_t</span> localVarBaseOffset;<br>    <span class="hljs-type">uint32_t</span> evalStackBaseOffset;<br>    <span class="hljs-type">uint32_t</span> localStackSize; <span class="hljs-comment">// args + locals StackObject size</span><br>    std::vector&lt;<span class="hljs-type">uint64_t</span>&gt; resolveDatas;<br>    std::vector&lt;InterpExceptionClause*&gt; exClauses;<br>    <span class="hljs-type">bool</span> initLocals;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>第二个参数<code>StackObject* argBase</code>中的<code>StackObject</code>本身并不是数据类型，而是作为解释器栈槽（stack slot），同时声明解释器的最小栈单位是8字节。每个参数、局部变量、临时值都可能占用 1个或多个<code>StackObject</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/InterpreterDefs.h</span><br><span class="hljs-keyword">union</span> <span class="hljs-title class_">StackObject</span> &#123;<br>    <span class="hljs-type">uint64_t</span> __u64;<br>    <span class="hljs-type">void</span>* ptr;<br>    <span class="hljs-type">bool</span> b;<br>    <span class="hljs-type">int8_t</span> i8;<br>    <span class="hljs-type">uint8_t</span> u8;<br>    <span class="hljs-type">int16_t</span> i16;<br>    <span class="hljs-type">uint16_t</span> u16;<br>    <span class="hljs-type">int32_t</span> i32;<br>    <span class="hljs-type">uint32_t</span> u32;<br>    <span class="hljs-type">int64_t</span> i64;<br>    <span class="hljs-type">uint64_t</span> u64;<br>    <span class="hljs-type">float</span> f4;<br>    <span class="hljs-type">double</span> f8;<br>    Il2CppObject* obj;<br>    Il2CppString* str;<br>    Il2CppObject** ptrObj;<br>&#125;;<br><span class="hljs-built_in">static_assert</span>(<span class="hljs-built_in">sizeof</span>(StackObject) == <span class="hljs-number">8</span>, <span class="hljs-string">&quot;require 8 bytes&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>其中<strong>bool&#x2F;int8&#x2F;int16&#x2F;int32&#x2F;float</strong>类型实际只用slot低位，高位清零，但仍占用8字节槽；<strong>int64&#x2F;double&#x2F;指针</strong>类型正好占满8字节；<strong>Struct</strong>类型将按大小拆成多个StackObject，如：12字节 -&gt; 8字节+4字节 -&gt; 2个slot。对于简单的入参类型，如<code>int A</code>，可以直接按上述定义读取值，例：<code>int valueA = argBase[i].i32</code>；写回值时要注意不要混用成员，同理：<code>argBase[i].i32 = newValue</code>；针对值传递结构体，取值时应按结构体大小，把连续的<code>StackObject</code>视同一块原始内存来读：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">auto</span>* value = <span class="hljs-built_in">reinterpret_cast</span>&lt;Struct*&gt;(&amp;argBase[start]);<br>Struct v = *value;<br><span class="hljs-type">float</span> f = value-&gt;someField;  <span class="hljs-comment">// 也可只读字段</span><br></code></pre></td></tr></table></figure>
+
+<p>写回时直接按内存拷贝：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">auto</span>* dst = <span class="hljs-built_in">reinterpret_cast</span>&lt;Struct*&gt;(&amp;argBase[start]);<br>*dst = newValue;<br></code></pre></td></tr></table></figure>
+
+<p>针对ref&#x2F;out（引用传递&#x2F;输出引用）结构体，栈上只放了1个指向真实Struct地址的指针，读写方式需要对应修改：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">auto</span>* p = <span class="hljs-built_in">reinterpret_cast</span>&lt;Struct*&gt;(argBase[i].ptr);  <span class="hljs-comment">// 读</span><br>p-&gt;field = value;  <span class="hljs-comment">// 写</span><br>*p = newValue;  <span class="hljs-comment">// 写</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="0x01-函数进入监听"><a href="#0x01-函数进入监听" class="headerlink" title="0x01 函数进入监听"></a>0x01 函数进入监听</h3><p>获得<code>EnterFrameFromNative</code>和<code>EnterFrameFromInterpreter</code>函数绝对地址的方法可参考<a target="_blank" rel="noopener" href="https://github.com/IIIImmmyyy/HybridCLR-Hook">HybridCLR-Hook</a>，此处不赘述。基于Dobby的hook写法示例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//0xF5D7C4 InterpFrame* EnterFrameFromNative(const InterpMethodInfo* imi, StackObject* argBase)</span><br><span class="hljs-comment">//0xF5D8E0 InterpFrame* EnterFrameFromInterpreter(const InterpMethodInfo* imi, StackObject* argBase)</span><br><span class="hljs-built_in">HOOK_DEF</span>(InterpFrame*, EnterFrameFromInterpreter, InterpFrame* self, <span class="hljs-type">const</span> InterpMethodInfo* imi, StackObject* argBase) &#123;<br>    InterpFrame* newFrame = <span class="hljs-built_in">orig_EnterFrameFromInterpreter</span>(self, imi, argBase);<br>    <span class="hljs-type">const</span> MethodInfo* method = imi-&gt;method;<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name = method-&gt;name;<br>    <span class="hljs-built_in">LOGW</span>(<span class="hljs-string">&quot;[Interp] %s called&quot;</span>, name);<br>    <span class="hljs-keyword">return</span> newFrame;<br>&#125;<br><span class="hljs-comment">// Use absolute address for test</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">doHook</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">//HOOK_FUNC((il2cpp_base + 0xF5D7C4), EnterFrameFromNative);</span><br>    <span class="hljs-built_in">HOOK_FUNC</span>((il2cpp_base + <span class="hljs-number">0xF5D8E0</span>), EnterFrameFromInterpreter);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="0x02-入参修改"><a href="#0x02-入参修改" class="headerlink" title="0x02 入参修改"></a>0x02 入参修改</h3><p>函数原型：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">// Token: 0x06000694 RID: 1684 RVA: 0x000260EC File Offset: 0x000242EC</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">AddDropGoldCoins</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> count</span>)</span> &#123;<br>	<span class="hljs-keyword">this</span>.m_TotalGoldCoins += count;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>hook示例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">HOOK_DEF</span>(InterpFrame*, EnterFrameFromInterpreter, InterpFrame* self, <span class="hljs-type">const</span> InterpMethodInfo* imi, StackObject* argBase) &#123;<br>    <span class="hljs-type">const</span> MethodInfo* method = imi-&gt;method;<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name = method-&gt;name;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(name, <span class="hljs-string">&quot;AddDropGoldCoins&quot;</span>) == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-type">int</span> count = argBase[<span class="hljs-number">1</span>].i32;<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;[Interp] orig count： %d&quot;</span>, count);<br>        argBase[<span class="hljs-number">1</span>].i32 = count * <span class="hljs-number">50</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">orig_EnterFrameFromInterpreter</span>(self, imi, argBase);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="函数返回值读取及修改"><a href="#函数返回值读取及修改" class="headerlink" title="函数返回值读取及修改"></a>函数返回值读取及修改</h2><h4 id="0x03-原理分析"><a href="#0x03-原理分析" class="headerlink" title="0x03 原理分析"></a>0x03 原理分析</h4><p>首先查看<code>hybridclr/interpreter/Engine.h</code>的<code>LeaveFrame</code>函数，逐行解读：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/Engine.h</span><br><span class="hljs-function">InterpFrame* <span class="hljs-title">LeaveFrame</span><span class="hljs-params">()</span> </span>&#123;<br>	<span class="hljs-built_in">IL2CPP_ASSERT</span>(_machineState.<span class="hljs-built_in">GetFrameTopIdx</span>() &gt; _frameBaseIdx);  <span class="hljs-comment">// 断言当前至少存在一个可弹出的解释器帧，防止栈下溢</span><br>	<span class="hljs-built_in">POP_STACK_FRAME</span>();  <span class="hljs-comment">// 通知调试器/profiler当前方法即将退出</span><br>	InterpFrame* frame = _machineState.<span class="hljs-built_in">GetTopFrame</span>();  <span class="hljs-comment">// 取得当前正在执行的callee帧</span><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> IL2CPP_ENABLE_PROFILER</span><br>	<span class="hljs-built_in">il2cpp_codegen_profiler_method_exit</span>(frame-&gt;method-&gt;method);<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>	<span class="hljs-keyword">if</span> (frame-&gt;exFlowBase) &#123;  <span class="hljs-comment">// 如果该方法内部使用过异常处理（try/catch）</span><br>		_machineState.<span class="hljs-built_in">SetExceptionFlowTop</span>(frame-&gt;exFlowBase);  <span class="hljs-comment">// 恢复异常流栈到进入该方法之前的状态，防止异常信息泄漏到caller帧</span><br>	&#125;<br>	_machineState.<span class="hljs-built_in">PopFrame</span>();  <span class="hljs-comment">// 将当前callee Frame从frame栈中移除</span><br>	_machineState.<span class="hljs-built_in">SetStackTop</span>(frame-&gt;oldStackTop);  <span class="hljs-comment">// 恢复解释器操作数栈到进入该方法之前的高度</span><br>	_machineState.<span class="hljs-built_in">SetLocalPoolBottomIdx</span>(frame-&gt;oldLocalPoolBottomIdx);<br>	<span class="hljs-keyword">return</span> _machineState.<span class="hljs-built_in">GetFrameTopIdx</span>() &gt; _frameBaseIdx ? _machineState.<span class="hljs-built_in">GetTopFrame</span>() : <span class="hljs-literal">nullptr</span>;  <span class="hljs-comment">// 如果还有上层帧，则返回caller的InterpFrame*；如果已经回到解释器入口，则返回nullptr，解释器执行结束</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>进一步查找<code>LeaveFrame</code>函数于何处被使用，进入到<code>hybridclr/interpreter/interpreter_Execute.cpp</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/interpreter_Execute.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> LEAVE_FRAME() &#123; \</span><br><span class="hljs-meta">	frame = interpFrameGroup.LeaveFrame(); \  <span class="hljs-comment">// 弹出当前解释器帧返回caller帧，或nullptr</span></span><br>	<span class="hljs-keyword">if</span> (frame) \                              <span class="hljs-comment">// 如果为解释器内部调用返回（interp -&gt; interp）</span><br>	&#123; \<br>		<span class="hljs-built_in">LOAD_PREV_FRAME</span>(); \                  <span class="hljs-comment">// 恢复caller帧的执行上下文，继续解释执行</span><br>	&#125;\<br>	<span class="hljs-keyword">else</span> \                                    <span class="hljs-comment">// 最外层返回（interp -&gt; native）</span><br>	&#123; \<br>		<span class="hljs-keyword">goto</span> ExitEvalLoop; \                  <span class="hljs-comment">// 跳出解释器主循环</span><br>	&#125; \<br>&#125;<br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SET_RET_AND_LEAVE_FRAME(nativeSize, interpSize) &#123; \</span><br><span class="hljs-meta">	void* _curRet = frame-&gt;ret; \                                   <span class="hljs-comment">// 保存当前帧的返回值地址</span></span><br>	frame = interpFrameGroup.<span class="hljs-built_in">LeaveFrame</span>(); \                        <span class="hljs-comment">// 弹出当前解释器帧并返回caller帧，或nullptr</span><br>	<span class="hljs-keyword">if</span> (frame) \                                                    <span class="hljs-comment">// 如果为解释器内部调用返回（interp -&gt; interp）</span><br>	&#123; \<br>        Copy##<span class="hljs-built_in">interpSize</span>(_curRet, (<span class="hljs-type">void</span>*)(localVarBase + __ret)); \ <span class="hljs-comment">// 使用解释器格式（StackObject）拷贝callee帧的返回值到_curRet，供caller帧读取</span><br>		<span class="hljs-built_in">LOAD_PREV_FRAME</span>(); \                                        <span class="hljs-comment">// 恢复caller帧的执行上下文，继续解释执行</span><br>	&#125;\<br>	<span class="hljs-keyword">else</span> \                                                          <span class="hljs-comment">// 最外层返回（interp -&gt; native）,如：Runtime::Invoke</span><br>	&#123; \<br>        Copy##<span class="hljs-built_in">nativeSize</span>(_curRet, (<span class="hljs-type">void</span>*)(localVarBase + __ret)); \ <span class="hljs-comment">// 使用native ABI约定拷贝返回值</span><br>		<span class="hljs-keyword">goto</span> ExitEvalLoop; \                                        <span class="hljs-comment">// 跳出解释器主循环</span><br>	&#125; \<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>可见此处定义了2个预处理宏，其中<code>LEAVE_FRAME()</code>用于在执行循环中弹出当前解释器帧，恢复上一帧上下文或在没有帧可返回时跳出解释器主循环，执行完毕后销毁当前帧；<code>SET_RET_AND_LEAVE_FRAME(nativeSize, interpSize)</code>用于处理有返回值的方法，这里我们结合<code>Execute</code>函数中的特定case以及<code>Copy##</code>函数源码重新阅读一遍，以<code>case RetVar_ret_1</code>为例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/interpreter_Execute.cpp</span><br><span class="hljs-keyword">case</span> HiOpcodeEnum::RetVar_ret_1: &#123;          <span class="hljs-comment">// 若返回值为1字节</span><br>	<span class="hljs-type">uint16_t</span> __ret = *(<span class="hljs-type">uint16_t</span>*)(ip + <span class="hljs-number">2</span>);  <span class="hljs-comment">// 从当前解释器指令后2个字节中取uint16_t作为__ret，作为返回值的局部变量索引</span><br>	<span class="hljs-built_in">SET_RET_AND_LEAVE_FRAME</span>(<span class="hljs-number">1</span>, <span class="hljs-number">8</span>);          <span class="hljs-comment">// 将返回值从localVarBase的ret slot拷贝到caller帧的ret slot，供caller读取</span><br>	<span class="hljs-keyword">continue</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/MemoryUtil.h</span><br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">Copy1</span><span class="hljs-params">(<span class="hljs-type">void</span>* dst, <span class="hljs-type">void</span>* src)</span> </span>&#123;  <span class="hljs-comment">// 如果最外层返回至native，遵循ABI按真实类型大小进行拷贝，即Copy1</span><br>	*(<span class="hljs-type">uint8_t</span>*)dst = *(<span class="hljs-type">uint8_t</span>*)src;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">Copy8</span><span class="hljs-params">(<span class="hljs-type">void</span>* dst, <span class="hljs-type">void</span>* src)</span> </span>&#123;  <span class="hljs-comment">// 如果解释器内部调用返回，执行Copy8，最终返回1个StackObject（8字节）</span><br>	*(<span class="hljs-type">uint64_t</span>*)dst = *(<span class="hljs-type">uint64_t</span>*)src;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么，如果想要读取或者修改函数返回值，<strong>最稳妥的载点应该是<code>Copy</code>函数执行之前，对<code>localVarBase + __ret</code>指向的内存区域进行读写</strong>。但还有1个关键问题待确认：<code>Copy</code>执行之前，<code>LeaveFrame</code>已经执行完毕，在这中间阶段寄存器中是否还留存有<code>InterpFrame* callee</code>？相关信息是否已经被<code>LeaveFrame</code>销毁？这关乎到我们能否在此处获得callee帧method信息，以及进行特定method hook。</p>
+<p>阅读源码<code>case RetVar_ret_n</code>，通过<code>memove</code>交叉引用定位到<code>LeaveFrame()</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/interpreter_Execute.cpp</span><br><span class="hljs-keyword">case</span> HiOpcodeEnum::RetVar_ret_n: &#123;<br>	<span class="hljs-type">uint16_t</span> __ret = *(<span class="hljs-type">uint16_t</span>*)(ip + <span class="hljs-number">2</span>);<br>	<span class="hljs-type">uint32_t</span> __size = *(<span class="hljs-type">uint32_t</span>*)(ip + <span class="hljs-number">4</span>);<br>	std::<span class="hljs-built_in">memmove</span>(frame-&gt;ret, (<span class="hljs-type">void</span>*)(localVarBase + __ret), __size);<br>	<span class="hljs-built_in">LEAVE_FRAME</span>();<br>	<span class="hljs-keyword">continue</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对应：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">loc_F52F24:</span>                              <br>	<span class="hljs-keyword">LDRH</span> <span class="hljs-built_in">W8</span>, [<span class="hljs-built_in">X22</span>,<span class="hljs-number">#2</span>]                 <span class="hljs-comment">; jumptable 0000000000F4AAC0 case 294</span><br>	<span class="hljs-keyword">LDR</span> <span class="hljs-built_in">W2</span>, [<span class="hljs-built_in">X22</span>,<span class="hljs-number">#4</span>]                  <span class="hljs-comment">; size_t</span><br>	<span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X0</span>, [<span class="hljs-built_in">X25</span>,<span class="hljs-number">#0x18</span>]               <span class="hljs-comment">; void *</span><br>	<span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X1</span>, <span class="hljs-built_in">X23</span>, <span class="hljs-built_in">X8</span>,LSL<span class="hljs-number">#3</span>             <span class="hljs-comment">; void *</span><br>	<span class="hljs-keyword">BL</span> .memmove<br>	<span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X0</span>, <span class="hljs-built_in">SP</span>, <span class="hljs-number">#0x1460</span>+var_BF0<br>	<span class="hljs-keyword">BL</span> LeaveFrame                     <span class="hljs-comment">; sub_F5D954</span><br>	<span class="hljs-keyword">B</span> loc_F5445C<br></code></pre></td></tr></table></figure>
+
+<p><code>Execute</code>共计调用<code>LeaveFrame</code>16次，与IDA所查看的交叉引用次数相符。此处画一个流程图便于理解：</p>
+<p><img src="/img/hybridCLR/0x03-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>顺带根据Copy的系列定义，对比Asm语义逐一标注出<code>SET_RET_AND_LEAVE_FRAME(1, 8)</code>至<code>SET_RET_AND_LEAVE_FRAME(32, 32)</code>入口：</p>
+<p><img src="/img/hybridCLR/0x03-2.png" srcset="/img/loading.gif" lazyload></p>
+<p>以<code>case RetVar_ret_24</code>为例（<code>ObscuredFloat</code>就是24字节Struct，后面接着细说），先解读入口的几句Asm：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">loc_F4B24C:</span>                       <span class="hljs-comment">; jumptable 0000000000F4AAC0 case 291 RetVar_ret_24</span><br>	<span class="hljs-keyword">LDRH</span> <span class="hljs-built_in">W20</span>, [<span class="hljs-built_in">X22</span>,<span class="hljs-number">#2</span>]            <span class="hljs-comment">; X22 = ip，W20 = __ret = ip + 2</span><br>	<span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X19</span>, [<span class="hljs-built_in">X25</span>,<span class="hljs-number">#0x18</span>]          <span class="hljs-comment">; X25 = InterpFrame* callee，X19 = frame-&gt;ret = dst</span><br>	<span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X0</span>, <span class="hljs-built_in">SP</span>, <span class="hljs-number">#0x1460</span>+var_BF0   <span class="hljs-comment">; X0 = &amp;interpFrameGroup(this)</span><br>	<span class="hljs-keyword">BL</span> LeaveFrame<br>	<span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X23</span>, <span class="hljs-built_in">X20</span>,LSL<span class="hljs-number">#3</span>        <span class="hljs-comment">; X23 = localVarBase，X20 = __ret，X8 = src，等价于：void* src = localVarBase + __ret</span><br>	<span class="hljs-keyword">CMP</span> <span class="hljs-built_in">X19</span>, <span class="hljs-built_in">X8</span><br>	B.HI loc_F50DCC<br>	<span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X9</span>, [<span class="hljs-built_in">X8</span>]                  <span class="hljs-comment">; 拷贝slot0</span><br>	<span class="hljs-keyword">STR</span> <span class="hljs-built_in">X9</span>, [<span class="hljs-built_in">X19</span>]                 <span class="hljs-comment">; 拷贝slot0</span><br>	<span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#8</span>]               <span class="hljs-comment">; 拷贝slot1</span><br>	<span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-number">#0x10</span>             <span class="hljs-comment">; X8 -&gt; slot3</span><br>	<span class="hljs-keyword">STR</span> <span class="hljs-built_in">X9</span>, [<span class="hljs-built_in">X19</span>,<span class="hljs-number">#8</span>]              <span class="hljs-comment">; 拷贝slot1</span><br>	<span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X19</span>, <span class="hljs-built_in">X19</span>, <span class="hljs-number">#0x10</span>           <span class="hljs-comment">; X19 -&gt; slot3</span><br>	<span class="hljs-keyword">B</span> loc_F54454                  <span class="hljs-comment">; slot3后续拷贝</span><br></code></pre></td></tr></table></figure>
+
+<p>因此，需要重点关注寄存器X25所保存的<code>InterpFrame* callee</code>在<code>LeaveFrame</code>执行完毕后是否被其他值覆盖。结合<code>MachineState</code>定义，把<code>LeaveFrame</code>的Asm读一遍：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// hybridclr/interpreter/Engine.h</span><br><span class="hljs-built_in">MachineState</span>() &#123;<br>	Config&amp; hc = Config::<span class="hljs-built_in">GetIns</span>();<br>	_stackSize = <span class="hljs-number">-1</span>;<br>	_stackBase = <span class="hljs-literal">nullptr</span>;<br>	_stackTopIdx = <span class="hljs-number">0</span>;<br>	_localPoolBottomIdx = <span class="hljs-number">-1</span>;<br>	_frameBase = <span class="hljs-literal">nullptr</span>;<br>	_frameCount = <span class="hljs-number">-1</span>;<br>	_frameTopIdx = <span class="hljs-number">0</span>;<br>	_exceptionFlowBase = <span class="hljs-literal">nullptr</span>;<br>	_exceptionFlowCount = <span class="hljs-number">-1</span>;<br>	_exceptionFlowTopIdx = <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">LeaveFrame:</span><br>    STP <span class="hljs-built_in">X20</span>, <span class="hljs-built_in">X19</span>, [<span class="hljs-built_in">SP</span>,#-<span class="hljs-number">0x10</span>]!        <span class="hljs-comment">; 保存被调用者寄存器 X19/X20</span><br>    STP <span class="hljs-built_in">X29</span>, <span class="hljs-built_in">X30</span>, [<span class="hljs-built_in">SP</span>,<span class="hljs-number">#0x10</span>]          <span class="hljs-comment">; 保存 FP/LR</span><br>    <span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X29</span>, <span class="hljs-built_in">SP</span>, <span class="hljs-number">#0x10</span>                <span class="hljs-comment">; 建立栈帧</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X0</span>]                      <span class="hljs-comment">; X8 = this-&gt;_machineState</span><br>    <span class="hljs-keyword">MOV</span> <span class="hljs-built_in">X19</span>, <span class="hljs-built_in">X0</span>                       <span class="hljs-comment">; X19 = this (InterpFrameGroup*)</span><br>    LDRSW <span class="hljs-built_in">X9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x20</span>]              <span class="hljs-comment">; X9 = _frameTopIdx</span><br>    <span class="hljs-keyword">CMP</span> <span class="hljs-built_in">W9</span>, <span class="hljs-number">#1</span><br>    B.LT loc_F5D984                   <span class="hljs-comment">; 若 frameTopIdx &lt; 1，则没有 frame</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x18</span>]                <span class="hljs-comment">; X8 = _frameBase</span><br>    <span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X9</span>, <span class="hljs-keyword">LSL</span> <span class="hljs-number">#6</span>            <span class="hljs-comment">; X8 = _frameBase + frameTopIdx * sizeof(InterpFrame)</span><br>    <span class="hljs-keyword">SUB</span> <span class="hljs-built_in">X20</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-number">#0x40</span>                <span class="hljs-comment">; X20 = GetTopFrame() = base + idx - 1</span><br>    <span class="hljs-keyword">B</span> loc_F5D988<br><br><span class="hljs-symbol">loc_F5D984:</span><br>    <span class="hljs-keyword">MOV</span> <span class="hljs-built_in">X20</span>, XZR                      <span class="hljs-comment">; frame = nullptr</span><br><br><span class="hljs-symbol">loc_F5D988:</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X20</span>]                     <span class="hljs-comment">; X8 = frame-&gt;method</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X0</span>, [<span class="hljs-built_in">X8</span>]                      <span class="hljs-comment">; X0 = frame-&gt;method-&gt;method</span><br>    <span class="hljs-keyword">BL</span> sub_C4E428                     <span class="hljs-comment">; profiler_method_exit(method)</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X20</span>,<span class="hljs-number">#0x28</span>]               <span class="hljs-comment">; X8 = frame-&gt;exFlowBase</span><br>    <span class="hljs-keyword">CBZ</span> <span class="hljs-built_in">X8</span>, loc_F5D9BC                <span class="hljs-comment">; 若无异常流，跳过</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X9</span>, [<span class="hljs-built_in">X19</span>]                     <span class="hljs-comment">; X9 = _machineState</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X10</span>,[<span class="hljs-built_in">X9</span>,<span class="hljs-number">#0x28</span>]                <span class="hljs-comment">; X10 = _exceptionFlowBase</span><br>    <span class="hljs-keyword">SUB</span> <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X10</span>                   <span class="hljs-comment">; X8 = exFlowBase - exceptionFlowBase (字节差)</span><br>    <span class="hljs-keyword">LSR</span> <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-number">#3</span>                    <span class="hljs-comment">; /8</span><br>    <span class="hljs-keyword">MOV</span> <span class="hljs-built_in">W10</span>,<span class="hljs-number">#0xAAAB</span><br>    MOVK <span class="hljs-built_in">W10</span>,<span class="hljs-number">#0xAAAA</span>,LSL<span class="hljs-number">#16</span>           <span class="hljs-comment">; W10 = 0xAAAAAAAB</span><br>    <span class="hljs-keyword">MUL</span> <span class="hljs-built_in">W8</span>, <span class="hljs-built_in">W8</span>, <span class="hljs-built_in">W10</span>                   <span class="hljs-comment">; /3 → 等价于 /24</span><br>    <span class="hljs-keyword">STR</span> <span class="hljs-built_in">W8</span>, [<span class="hljs-built_in">X9</span>,<span class="hljs-number">#0x30</span>]                <span class="hljs-comment">; _exceptionFlowTopIdx = (top - base)</span><br><br><span class="hljs-symbol">loc_F5D9BC:</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X19</span>]                     <span class="hljs-comment">; X8 = _machineState</span><br>    <span class="hljs-keyword">MOV</span> <span class="hljs-built_in">X0</span>, XZR                       <span class="hljs-comment">; 默认返回 nullptr</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x20</span>]                <span class="hljs-comment">; W9 = _frameTopIdx</span><br>    <span class="hljs-keyword">SUB</span> <span class="hljs-built_in">W9</span>, <span class="hljs-built_in">W9</span>, <span class="hljs-number">#1</span><br>    <span class="hljs-keyword">STR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x20</span>]                <span class="hljs-comment">; PopFrame(): --_frameTopIdx</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X19</span>]<br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X20</span>,<span class="hljs-number">#0x10</span>]               <span class="hljs-comment">; frame-&gt;oldStackTop</span><br>    <span class="hljs-keyword">STR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x0C</span>]                <span class="hljs-comment">; _stackTopIdx = oldStackTop</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X19</span>]<br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X20</span>,<span class="hljs-number">#0x38</span>]               <span class="hljs-comment">; frame-&gt;oldLocalPoolBottomIdx</span><br>    <span class="hljs-keyword">STR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x10</span>]                <span class="hljs-comment">; _localPoolBottomIdx = oldLocalPoolBottomIdx</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X19</span>]<br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">W9</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x20</span>]                <span class="hljs-comment">; W9 = _frameTopIdx</span><br>    <span class="hljs-keyword">CMP</span> <span class="hljs-built_in">W9</span>, <span class="hljs-number">#1</span><br>    B.LT loc_F5DA14                   <span class="hljs-comment">; 若无 frame，返回 nullptr</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">W10</span>,[<span class="hljs-built_in">X19</span>,<span class="hljs-number">#0x0C</span>]               <span class="hljs-comment">; W10 = _frameBaseIdx</span><br>    <span class="hljs-keyword">CMP</span> <span class="hljs-built_in">W9</span>, <span class="hljs-built_in">W10</span><br>    B.LS loc_F5DA14                   <span class="hljs-comment">; 若 &lt;= baseIdx，返回 nullptr</span><br>    <span class="hljs-keyword">LDR</span> <span class="hljs-built_in">X8</span>, [<span class="hljs-built_in">X8</span>,<span class="hljs-number">#0x18</span>]                <span class="hljs-comment">; X8 = _frameBase</span><br>    SXTW <span class="hljs-built_in">X9</span>, <span class="hljs-built_in">W9</span><br>    <span class="hljs-keyword">ADD</span> <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-built_in">X9</span>, <span class="hljs-keyword">LSL</span> <span class="hljs-number">#6</span><br>    <span class="hljs-keyword">SUB</span> <span class="hljs-built_in">X0</span>, <span class="hljs-built_in">X8</span>, <span class="hljs-number">#0x40</span>                 <span class="hljs-comment">; 返回新的 GetTopFrame()，即caller Frame</span><br><br><span class="hljs-symbol">loc_F5DA14:</span><br>    LDP <span class="hljs-built_in">X29</span>, <span class="hljs-built_in">X30</span>, [<span class="hljs-built_in">SP</span>,<span class="hljs-number">#0x10</span>]          <span class="hljs-comment">; 恢复 FP/LR</span><br>    LDP <span class="hljs-built_in">X20</span>, <span class="hljs-built_in">X19</span>, [<span class="hljs-built_in">SP</span>],<span class="hljs-number">#0x20</span>          <span class="hljs-comment">; 恢复寄存器并回收栈</span><br>    RET<br></code></pre></td></tr></table></figure>
+
+<p>可见X25 在整个<code>LeaveFrame</code>执行期间保持不变，<code>LeaveFrame</code>最终返回<code>X0 = caller Frame</code>。现在可以确认：<strong>在<code>CMP X19, X8</code>语句处观测X25寄存器，即可获得当前method；读写X8寄存器指向的内存，即可读写函数返回值。</strong></p>
+<h3 id="0x04-函数返回值读取"><a href="#0x04-函数返回值读取" class="headerlink" title="0x04 函数返回值读取"></a>0x04 函数返回值读取</h3><p>函数原型：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">// Token: 0x170005D7 RID: 1495</span><br><span class="hljs-comment">// (get) Token: 0x06002918 RID: 10520 RVA: 0x000BA685 File Offset: 0x000B8885</span><br><span class="hljs-keyword">public</span> ObscuredFloat UpgradeReformSuccessRate &#123;<br>	<span class="hljs-keyword">get</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-number">0.001f</span> * (<span class="hljs-built_in">float</span>)<span class="hljs-keyword">this</span>.Level;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里需先在Github上找一份成品<code>ObscuredFloat</code>结构体定义并自行引用：<a target="_blank" rel="noopener" href="https://github.com/foxcookie/Goose_Goose_Duck_Hack/blob/906fe0899cae742a6cd666983d25af85ebc8a2e6/Struct/ObscuredTypes.hpp#L80">传送门</a></p>
+<p>可知<code>ObscuredFloat</code>结构体在内存中的真实布局为24字节：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">slot0 (0x00~0x07): currentCryptoKey | hiddenValue<br>slot1 (0x08~0x0F): hiddenValueOldByte4 | inited + padding<br>slot2 (0x10~0x17): fakeValue | fakeValueActive + padding<br></code></pre></td></tr></table></figure>
+
+<p>示例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//0xF5D8E0 InterpFrame* EnterFrameFromInterpreter(const InterpMethodInfo* imi, StackObject* argBase)</span><br><span class="hljs-built_in">HOOK_DEF</span>(InterpFrame*, EnterFrameFromInterpreter, InterpFrame* self, <span class="hljs-type">const</span> InterpMethodInfo* imi, StackObject* argBase) &#123;<br>    InterpFrame* newFrame = <span class="hljs-built_in">orig_EnterFrameFromInterpreter</span>(self, imi, argBase);<br>    <span class="hljs-type">const</span> MethodInfo* method = imi-&gt;method;<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name = method-&gt;name;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(name, <span class="hljs-string">&quot;get_UpgradeReformSuccessRate&quot;</span>) == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">LOGW</span>(<span class="hljs-string">&quot;[Interp] get_UpgradeReformSuccessRate called frame=%p method=%p&quot;</span>, newFrame, method);<br>    &#125;<br>    <span class="hljs-keyword">return</span> newFrame;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">on_ret24_cmp</span><span class="hljs-params">(<span class="hljs-type">void</span> *address, DobbyRegisterContext *ctx)</span> </span>&#123;<br>    <span class="hljs-type">uint64_t</span> x8  = ctx-&gt;general.regs.x8;<br>    InterpFrame* frame = (InterpFrame*)ctx-&gt;general.regs.x25;<br>    <span class="hljs-type">const</span> MethodInfo* method = frame-&gt;method-&gt;method;<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name = frame-&gt;method-&gt;method-&gt;name;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(name, <span class="hljs-string">&quot;get_UpgradeReformSuccessRate&quot;</span>) == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;F4B260 hit:&quot;</span>);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  X8  (ret src)   = %p&quot;</span>, (<span class="hljs-type">void</span>*)x8);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;InterpFrame:&quot;</span>);<br>        <span class="hljs-built_in">LOGW</span>(<span class="hljs-string">&quot;  self          = %p&quot;</span>, frame);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  imiMethod     = %p&quot;</span>, frame-&gt;method);<br>        <span class="hljs-built_in">LOGW</span>(<span class="hljs-string">&quot;  method        = %p&quot;</span>, frame-&gt;method-&gt;method);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  stackBasePtr  = %p&quot;</span>, frame-&gt;stackBasePtr);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  oldStackTop   = %d&quot;</span>, frame-&gt;oldStackTop);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  ret           = %p&quot;</span>, frame-&gt;ret);<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  ip            = %p&quot;</span>, frame-&gt;ip);<br><br>        <span class="hljs-comment">// dump return slot memory</span><br>        <span class="hljs-type">uint8_t</span> dump[<span class="hljs-number">24</span>];<br>        <span class="hljs-built_in">memcpy</span>(dump, (<span class="hljs-type">void</span>*)x8, <span class="hljs-built_in">sizeof</span>(dump));<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">24</span>; i += <span class="hljs-number">8</span>) &#123;<br>            <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;  ret +%02X: %02X %02X %02X %02X %02X %02X %02X %02X&quot;</span>,<br>                 i,<br>                 dump[i<span class="hljs-number">+0</span>], dump[i<span class="hljs-number">+1</span>], dump[i<span class="hljs-number">+2</span>], dump[i<span class="hljs-number">+3</span>],<br>                 dump[i<span class="hljs-number">+4</span>], dump[i<span class="hljs-number">+5</span>], dump[i<span class="hljs-number">+6</span>], dump[i<span class="hljs-number">+7</span>]);<br>        &#125;<br>        <span class="hljs-keyword">auto</span>* of = (ObscuredFloat*)x8;<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;Original ObscuredFloat:&quot;</span>);<br>        <span class="hljs-built_in">LOGW</span>(<span class="hljs-string">&quot;  key=%d hidden=0x%08X inited=%d fake=%f fakeActive=%d&quot;</span>,<br>             of-&gt;currentCryptoKey, (<span class="hljs-type">uint32_t</span>)of-&gt;hiddenValue, of-&gt;inited,<br>             of-&gt;fakeValue, of-&gt;fakeValueActive);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// Use absolute address for test</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">doHook</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">HOOK_FUNC</span>((il2cpp_base + <span class="hljs-number">0xF5D8E0</span>), EnterFrameFromInterpreter);  <span class="hljs-comment">// 双向观测</span><br>    <span class="hljs-built_in">DobbyInstrument</span>((<span class="hljs-type">void</span>*)(il2cpp_base + <span class="hljs-number">0xF4B260</span>), on_ret24_cmp);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="/img/hybridCLR/0x04-1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="0x05-函数返回值修改"><a href="#0x05-函数返回值修改" class="headerlink" title="0x05 函数返回值修改"></a>0x05 函数返回值修改</h3><p>示例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">on_ret24_cmp</span><span class="hljs-params">(<span class="hljs-type">void</span> *address, DobbyRegisterContext *ctx)</span> </span>&#123;<br>    <span class="hljs-type">uint64_t</span> x8  = ctx-&gt;general.regs.x8;<br>    InterpFrame* frame = (InterpFrame*)ctx-&gt;general.regs.x25;<br>    <span class="hljs-type">const</span> MethodInfo* method = frame-&gt;method-&gt;method;<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name = frame-&gt;method-&gt;method-&gt;name;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(name, <span class="hljs-string">&quot;get_UpgradeReformSuccessRate&quot;</span>) == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;Original ObscuredFloat:&quot;</span>);<br>        <span class="hljs-built_in">LOGW</span>(<span class="hljs-string">&quot;  key=%d hidden=0x%08X inited=%d fake=%f fakeActive=%d&quot;</span>,<br>             of-&gt;currentCryptoKey, (<span class="hljs-type">uint32_t</span>)of-&gt;hiddenValue, of-&gt;inited,<br>             of-&gt;fakeValue, of-&gt;fakeValueActive);<br><br>        of-&gt;fakeValueActive = <span class="hljs-literal">true</span>;<br>        of-&gt;<span class="hljs-built_in">Encrypt</span>(<span class="hljs-number">0.25f</span>);<br>        of-&gt;inited = <span class="hljs-literal">true</span>;<br><br>        <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;New ObscuredFloat:&quot;</span>);<br>        <span class="hljs-built_in">LOGE</span>(<span class="hljs-string">&quot;  key=%d hidden=0x%08X inited=%d fake=%f fakeActive=%d&quot;</span>,<br>             of-&gt;currentCryptoKey, (<span class="hljs-type">uint32_t</span>)of-&gt;hiddenValue, of-&gt;inited,<br>             of-&gt;fakeValue, of-&gt;fakeValueActive);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="/img/hybridCLR/0x05-1.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="下一步待实现"><a href="#下一步待实现" class="headerlink" title="下一步待实现"></a>下一步待实现</h2><p><del>画大饼时间到</del></p>
+<div>
+            <input type="checkbox"  >自动识别 EnterFrameFromNative、FromInterpreter 并hook
+
+          </div>
+
+<div>
+            <input type="checkbox"  >自动识别所有 Ret case 并插桩
+
+          </div>
+
+<div>
+            <input type="checkbox"  >高版本HybridCLR支持
+
+          </div>
+
+<div>
+            <input type="checkbox"  >区分数据类型，提供更多示例
+
+          </div>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+        <a href="/tags/HybridCLR/" class="print-no-link">#HybridCLR</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HybridCLR拆解记录 (Part. I)</div>
+      <div>http://floeic3.github.io/hybridCLR/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Floeice</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 9, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/coderustle2/" title="Coderustle2 (ver 1.8.16)">
+                        <span class="hidden-mobile">Coderustle2 (ver 1.8.16)</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-blond-omega.vercel.app","path":"window.location.pathname","meta":["nick","mail"],"requiredMeta":["nick"],"lang":"en","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/tw-emoji"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <font size="2"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script> var now = new Date(); function createtime(){ var grt= new Date("01/27/2026 00:00:00"); now.setTime(now.getTime()+250); days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); if(String(hnum).length ==1 ){ hnum = "0" + hnum; } minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); mnum = Math.floor(minutes); if(String(mnum).length ==1 ){ mnum = "0" + mnum; } seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); snum = Math.round(seconds); if(String(snum).length ==1 ){ snum = "0" + snum; } document.getElementById("timeDate").innerHTML = "🚀 for&nbsp"+dnum+"&nbspdays"; document.getElementById("times").innerHTML = hnum + "&nbsphr&nbsp" + mnum + "&nbspmin&nbsp" + snum + "&nbspsec"; } setInterval("createtime()",250); </script>  <br> <span>Copyright © 2026</span></a> <a href="https://github.com/floeic3" target="_blank" rel="nofollow noopener"> <span>Floeice</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
