@@ -23,7 +23,7 @@
   
     <meta name="description" content="被迫造轮子但必须得手撕Asm的感觉不亚于屎里找饭，这种自虐的感觉真让人欲罢不能。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HybridCLR拆解记录 (Part. I)">
+<meta property="og:title" content="基于Coderustle2的HybridCLR拆解记录">
 <meta property="og:url" content="http://floeic3.github.io/hybridCLR/index.html">
 <meta property="og:site_name" content="Floeice&#39;s Blog">
 <meta property="og:description" content="被迫造轮子但必须得手撕Asm的感觉不亚于屎里找饭，这种自虐的感觉真让人欲罢不能。">
@@ -32,8 +32,8 @@
 <meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x03-2.png">
 <meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x04-1.png">
 <meta property="og:image" content="http://floeic3.github.io/img/hybridCLR/0x05-1.png">
-<meta property="article:published_time" content="2026-02-08T18:00:00.000Z">
-<meta property="article:modified_time" content="2026-02-10T09:36:31.133Z">
+<meta property="article:published_time" content="2026-09-06T11:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-06T12:12:42.622Z">
 <meta property="article:author" content="Floeice">
 <meta property="article:tag" content="HybridCLR">
 <meta property="article:tag" content="Unity">
@@ -44,7 +44,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>HybridCLR拆解记录 (Part. I) - Floeice&#39;s Blog</title>
+  <title>基于Coderustle2的HybridCLR拆解记录 - Floeice&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="HybridCLR拆解记录 (Part. I)"></span>
+            <span id="subtitle" data-typed-text="基于Coderustle2的HybridCLR拆解记录"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-02-09 02:00" pubdate>
-          February 9, 2026 am
+        <time datetime="2026-09-06 19:00" pubdate>
+          September 6, 2026 pm
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k words
+          3.3k words
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          26 mins
+          28 mins
         
       </span>
     
@@ -282,7 +282,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">HybridCLR拆解记录 (Part. I)</h1>
+            <h1 id="seo-header">基于Coderustle2的HybridCLR拆解记录</h1>
             
             
               <div class="markdown-body">
@@ -369,26 +369,11 @@
 
 <p>运行结果：</p>
 <p><img src="/img/hybridCLR/0x05-1.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="下一步待实现"><a href="#下一步待实现" class="headerlink" title="下一步待实现"></a>下一步待实现</h2><p><del>画大饼时间到</del></p>
-<div>
-            <input type="checkbox"  >自动识别 EnterFrameFromNative、FromInterpreter 并hook
+<h2 id="后续尝试"><a href="#后续尝试" class="headerlink" title="后续尝试"></a>后续尝试</h2><h3 id="0x06-自动识别EnterFrameFromNative-FromInterpreter并hook"><a href="#0x06-自动识别EnterFrameFromNative-FromInterpreter并hook" class="headerlink" title="0x06 自动识别EnterFrameFromNative &#x2F; FromInterpreter并hook"></a>0x06 自动识别EnterFrameFromNative &#x2F; FromInterpreter并hook</h3><p>示例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// STP  X20, X19, [X0]</span><br><span class="hljs-comment">// STR  W22, [X0,#0x10]</span><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-type">const</span> Pattern_EnterFrameFromInterpreter = <span class="hljs-string">&quot;14 4C 00 A9 16 10 00 B9&quot;</span>;<br><br><span class="hljs-comment">// STP  X22, X21, [X0]</span><br><span class="hljs-comment">// STR  W24, [X0,#0x10]</span><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-type">const</span> Pattern_EnterFrameFromNative = <span class="hljs-string">&quot;16 54 00 A9 18 10 00 B9&quot;</span>;<br><br><span class="hljs-comment">// 自动查找并初始化所有变量地址</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">auto_find_addrs</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">auto</span> il2cpp_map = KittyScanner::ElfScanner::<span class="hljs-built_in">findElf</span>(<span class="hljs-string">&quot;libil2cpp.so&quot;</span>).<span class="hljs-built_in">baseSegment</span>();<br>    <span class="hljs-keyword">if</span> (il2cpp_map.<span class="hljs-built_in">isValid</span>()) &#123;<br>        <span class="hljs-type">uintptr_t</span> start = il2cpp_map.startAddress;<br>        <span class="hljs-type">uintptr_t</span> end = il2cpp_map.endAddress;<br>        <span class="hljs-comment">// 查找 EnterFrameFromInterpreter</span><br>        <span class="hljs-type">uintptr_t</span> found_effi_addr = KittyScanner::<span class="hljs-built_in">findIdaPatternFirst</span>(start, end, Pattern_EnterFrameFromInterpreter);<br>        <span class="hljs-keyword">if</span> (found_effi_addr != <span class="hljs-number">0</span>) &#123;<br>            effi_addr = found_effi_addr - <span class="hljs-number">0x50</span>;  <span class="hljs-comment">// 此处未校验函数头合法性，请自行补充</span><br>            <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;[✓] Found EnterFrameFromInterpreter at %&quot;</span> PRIx64, effi_addr - il2cpp_base);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">LOGE</span>(<span class="hljs-string">&quot;[-] Failed to find EnterFrameFromInterpreter&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 查找 EnterFrameFromNative</span><br>        <span class="hljs-type">uintptr_t</span> found_effn_addr = KittyScanner::<span class="hljs-built_in">findIdaPatternFirst</span>(start, end, Pattern_EnterFrameFromNative);<br>        <span class="hljs-keyword">if</span> (found_effn_addr != <span class="hljs-number">0</span>) &#123;<br>            effn_addr = found_effn_addr - <span class="hljs-number">0x58</span>;  <span class="hljs-comment">// 此处未校验函数头合法性，请自行补充</span><br>            <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;[✓] Found EnterFrameFromNative at %&quot;</span> PRIx64, effn_addr - il2cpp_base);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">LOGE</span>(<span class="hljs-string">&quot;[-] Failed to find EnterFrameFromNative&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-          </div>
-
-<div>
-            <input type="checkbox"  >自动识别所有 Ret case 并插桩
-
-          </div>
-
-<div>
-            <input type="checkbox"  >高版本HybridCLR支持
-
-          </div>
-
-<div>
-            <input type="checkbox"  >区分数据类型，提供更多示例
-
-          </div>
+<h3 id="0x07-自动识别所有Ret-case并插桩并hook"><a href="#0x07-自动识别所有Ret-case并插桩并hook" class="headerlink" title="0x07 自动识别所有Ret case并插桩并hook"></a>0x07 自动识别所有Ret case并插桩并hook</h3><p>此处以<code>Ret24</code>为示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// LDR  X9, [X8]</span><br><span class="hljs-comment">// STR  X9, [X19]</span><br><span class="hljs-comment">// LDR  X9, [X8,#8]</span><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-type">const</span> Pattern_Ret24 = <span class="hljs-string">&quot;09 01 40 F9 69 02 00 F9 09 05 40 F9&quot;</span>;<br><br><span class="hljs-comment">// 自动查找并初始化所有变量地址</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">auto_find_addrs</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">auto</span> il2cpp_map = KittyScanner::ElfScanner::<span class="hljs-built_in">findElf</span>(<span class="hljs-string">&quot;libil2cpp.so&quot;</span>).<span class="hljs-built_in">baseSegment</span>();<br>    <span class="hljs-keyword">if</span> (il2cpp_map.<span class="hljs-built_in">isValid</span>()) &#123;<br>        <span class="hljs-type">uintptr_t</span> start = il2cpp_map.startAddress;<br>        <span class="hljs-type">uintptr_t</span> end = il2cpp_map.endAddress;<br>        <span class="hljs-comment">// 查找 ret24_cmp</span><br>        std::vector&lt;<span class="hljs-type">uintptr_t</span>&gt; results = KittyScanner::<span class="hljs-built_in">findIdaPatternAll</span>(start, end, Pattern_Ret24);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">uintptr_t</span> res : results) &#123;<br>            <span class="hljs-type">uint32_t</span> check_insn = <span class="hljs-number">0</span>;<br>            <span class="hljs-comment">// 向前偏移 8 字节校验 CMP X19, X8</span><br>            <span class="hljs-keyword">if</span> (KittyMemory::<span class="hljs-built_in">memRead</span>(res - <span class="hljs-number">0x8</span>, &amp;check_insn, <span class="hljs-number">4</span>)) &#123;<br>                <span class="hljs-comment">// 机器码 7F 02 08 EB (Little Endian: 0xEB08027F)</span><br>                <span class="hljs-keyword">if</span> (check_insn == <span class="hljs-number">0xEB08027F</span>) &#123;<br>                    ret24_cmp_addr = res - <span class="hljs-number">0x8</span>;<br>                    <span class="hljs-built_in">LOGI</span>(<span class="hljs-string">&quot;[✓] Found Ret24_cmp at %&quot;</span> PRIx64, ret24_cmp_addr - il2cpp_base);<br>                    <span class="hljs-keyword">break</span>;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-built_in">LOGE</span>(<span class="hljs-string">&quot;[-] Failed to find Ret24_cmp&quot;</span>);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -414,7 +399,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>HybridCLR拆解记录 (Part. I)</div>
+      <div>基于Coderustle2的HybridCLR拆解记录</div>
       <div>http://floeic3.github.io/hybridCLR/</div>
     </div>
     <div class="license-meta">
@@ -427,7 +412,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>February 9, 2026</div>
+          <div>September 6, 2026</div>
         </div>
       
       
